@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:all_links/core/alert_dialog/all_dialogs.dart';
+import 'package:all_links/features/home/presentation/controller/location_provider.dart';
 import 'package:all_links/features/home/presentation/pages/home_screen.dart';
-import 'package:all_links/infrastacture/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/constant.dart';
 import '../../../../core/constants/router_list.dart';
-import '../../../active_sharing_screen.dart';
+import '../../../active_sharing/presentation/pages/active_sharing_screen.dart';
 import '../../../profile/presentation/pages/profile_screen.dart';
 
 class PageViewApp extends StatefulWidget {
@@ -27,9 +30,10 @@ class _PageViewAppState extends State<PageViewApp> {
     setState(() {});
   }
 
+
   @override
   void initState() {
-    // selectNewPage(1);
+    // Provider.of<LocationProvider>(context, listen: false).getLocation(context);
     super.initState();
   }
 
@@ -45,7 +49,7 @@ class _PageViewAppState extends State<PageViewApp> {
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
         backgroundColor: kBackgroundColor,
-        title: Text(selectedPageName, style: TextStyle(color: Colors.black),),
+        title: Text(selectedPageName, style: const TextStyle(color: Colors.black),),
         actions: [
           IconButton(
             onPressed: () {

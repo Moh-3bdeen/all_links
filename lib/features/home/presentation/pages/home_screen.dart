@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'package:all_links/core/constants/constant.dart';
+import 'package:all_links/core/constants/router_list.dart';
 import 'package:all_links/core/shimmers/shimmers.dart';
 import 'package:all_links/features/home/presentation/controller/home_provider.dart';
-import 'package:all_links/features/links/data/models/link_model.dart';
 import 'package:all_links/features/links/presentation/controller/link_provider.dart';
 import 'package:all_links/features/links/presentation/widgets/account_link.dart';
 import 'package:flutter/material.dart';
@@ -39,13 +40,11 @@ class HomeScreen extends StatelessWidget {
                 height: MediaQuery.of(context).size.height / 2.8,
                 child: Center(
                   child: QrImageView(
-                    data: provider.userEmail ?? "",
+                    data: jsonEncode(provider.qrCode) ?? "",
                     version: QrVersions.auto,
                     size: MediaQuery.of(context).size.height / 2.8,
-                    backgroundColor:
-                        provider.isActive ? kMainColorDark : Colors.white,
-                    foregroundColor:
-                        provider.isActive ? Colors.white : Colors.black,
+                    backgroundColor: provider.isActive ? kMainColorDark : Colors.white,
+                    foregroundColor: provider.isActive ? Colors.white : Colors.black,
                     errorStateBuilder: (cxt, err) {
                       return const SizedBox(
                         child: Center(
@@ -64,29 +63,54 @@ class HomeScreen extends StatelessWidget {
             kDivider,
             kSizeBoxH16,
             Expanded(
-              child: Consumer<LinkProvider>(builder: (context, provider, child) {
+              child:
+                  Consumer<LinkProvider>(builder: (context, provider, child) {
                 if (provider.allMyLinks.isEmpty) {
                   provider.getMyLinks(context);
                 }
-                return ListView.builder(
-                  itemCount: provider.isGettingData
-                      ? 5
-                      : provider.allMyLinks.length > 3
-                          ? 3
-                          : provider.allMyLinks.length,
-                  itemBuilder: (context, index) {
-                    return provider.isGettingData
-                        ? AllShimmerLoaded.accountLink()
-                        : Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            child: AccountLink(
-                              // appName: provider.allMyLinks[index].title ?? "",
-                              link: provider.allMyLinks[index],
-                              background: const Color(0xFFFEE2E7),
+                return provider.allMyLinks.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: provider.isGettingData
+                            ? 5
+                            : provider.allMyLinks.length > 3
+                                ? 3
+                                : provider.allMyLinks.length,
+                        itemBuilder: (context, index) {
+                          return provider.isGettingData
+                              ? AllShimmerLoaded.accountLink()
+                              : Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 5),
+                                  child: AccountLink(
+                                    // appName: provider.allMyLinks[index].title ?? "",
+                                    link: provider.allMyLinks[index],
+                                    isSlidable: true,
+                                    background: const Color(0xFFFEE2E7),
+                                  ),
+                                );
+                        },
+                      )
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("You did not added any link before"),
+                            kSizeBoxH8,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, RouterList.addOrEditLink);
+                              },
+                              child: const Text(
+                                "Click to add new link",
+                                style: TextStyle(
+                                  color: kMainColorLight,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
                             ),
-                          );
-                  },
-                );
+                          ],
+                        ),
+                      );
               }),
             ),
           ],

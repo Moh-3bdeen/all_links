@@ -1,5 +1,5 @@
 import 'package:all_links/core/constants/router_list.dart';
-import 'package:all_links/features/active_sharing_screen.dart';
+import 'package:all_links/features/active_sharing/presentation/pages/active_sharing_screen.dart';
 import 'package:all_links/features/home/presentation/pages/page_view.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +12,7 @@ import '../../features/home/presentation/pages/splash_screen.dart';
 import '../../features/links/presentation/pages/add_edit_link.dart';
 import '../../features/profile/presentation/pages/followers_screen.dart';
 import '../../features/profile/presentation/pages/profile_screen.dart';
+import '../../features/profile/presentation/pages/user_profile_screen.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> getAll() => _routes;
@@ -28,6 +29,7 @@ class Routes {
     RouterList.followersScreen: (context) => const FollowersScreen(),
     RouterList.activeSharingScreen: (context) => const ActiveSharingScreen(),
     RouterList.pageViewApp: (context) => const PageViewApp(),
+    RouterList.userProfileScreen: (context) => const UserProfileScreen(),
   };
 
   static Route getRouteGenerate(RouteSettings settings) {
@@ -95,6 +97,12 @@ class Routes {
         return _buildRoute(
           settings,
           (_) => const PageViewApp(),
+        );
+
+      case RouterList.userProfileScreen:
+        return _buildRoute(
+          settings,
+          (_) => const UserProfileScreen(),
         );
 
       default:

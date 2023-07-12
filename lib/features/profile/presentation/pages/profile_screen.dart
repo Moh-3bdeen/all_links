@@ -1,22 +1,23 @@
 import 'package:all_links/features/links/presentation/controller/link_provider.dart';
 import 'package:all_links/features/links/presentation/widgets/account_link.dart';
-import 'package:all_links/features/profile/presentation/controller/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/router_list.dart';
 import '../../../../core/constants/constant.dart';
 import '../../../../core/shimmers/shimmers.dart';
+import '../../../../infrastacture/shared_preferences.dart';
 import '../../../links/data/models/link_model.dart';
 import '../widgets/profile_image.dart';
+import '../widgets/user_details.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Provider.of<LinkProvider>(context, listen: false).getMyLinks(context);
-    return Consumer2<ProfileProvider, LinkProvider>(
-      builder: (context, profileProvider, linkProvider, child) {
+    Provider.of<LinkProvider>(context, listen: false).getMyLinks(context);
+    return Consumer<LinkProvider>(
+      builder: (context, linkProvider, child) {
         linkProvider.getMyLinks(context);
         return linkProvider.isGettingData
             ? AllShimmerLoaded.profileScreen()
@@ -44,8 +45,8 @@ class ProfileScreen extends StatelessWidget {
                                           num: linkProvider.allMyLinks.length,
                                           type: "Links",
                                       ),
-                                      UserDetails(num: 120, type: "Followers"),
-                                      UserDetails(num: 590, type: "Following"),
+                                      const UserDetails(num: 120, type: "Followers"),
+                                      const UserDetails(num: 590, type: "Following"),
                                     ],
                                   ),
                                 ],
@@ -55,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         kSizeBoxH16,
                         Text(
-                          profileProvider.userName ?? "",
+                          SharedPrefController.getData(key: Keys.name.name) ?? "",
                           style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -64,12 +65,12 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         // kSizeBoxH8,
                         Text(
-                          profileProvider.userEmail ?? "",
+                          SharedPrefController.getData(key: Keys.email.name) ?? "",
                           style: const TextStyle(color: Colors.black),
                         ),
                         // kSizeBoxH8,
                         Text(
-                          profileProvider.userId ?? "",
+                          SharedPrefController.getData(key: Keys.id.name).toString(),
                           style: const TextStyle(color: Colors.black),
                         ),
                         kSizeBoxH16,
@@ -133,6 +134,7 @@ class ProfileScreen extends StatelessWidget {
                                         AccountLink(
                                           // appName: link.title ?? "",
                                           link: link,
+                                          isSlidable: true,
                                           background: index % 2 == 0
                                               ? const Color(0xFFFEE2E7)
                                               : const Color(0xFFE7E5F1),
@@ -166,41 +168,3 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-//////////////////////////
-
-class UserDetails extends StatelessWidget {
-  final int num;
-  final String type;
-
-  const UserDetails({
-    super.key,
-    required this.num,
-    required this.type,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, RouterList.followersScreen);
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "$num",
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          kSizeBoxH8,
-          Text(
-            type,
-            style: const TextStyle(color: Colors.black),
-          ),
-        ],
-      ),
-    );
-  }
-}

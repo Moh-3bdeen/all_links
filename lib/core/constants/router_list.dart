@@ -10,5 +10,6 @@ class RouterList {
   static const String followersScreen = "/FollowersScreen";
   static const String activeSharingScreen = "/ActiveSharingScreen";
   static const String pageViewApp = "/PageViewApp";
+  static const String userProfileScreen = "/UserProfileScreen";
 
 }

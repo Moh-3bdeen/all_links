@@ -18,7 +18,7 @@ class ScannerQRCodeScreen extends StatelessWidget {
             backgroundColor: kBackgroundColor,
             leading: IconButton(
               onPressed: () {
-                provider.dispose();
+                // provider.dispose();
                 Navigator.pop(context);
               },
               icon: const Icon(
@@ -86,12 +86,10 @@ class ScannerQRCodeScreen extends StatelessWidget {
   }
 
   void _onQRViewCreated(QRViewController controller, BuildContext context) {
-    Provider.of<ScannerQRProvider>(context, listen: false)
-        .setController(controller);
+    Provider.of<ScannerQRProvider>(context, listen: false).setController(controller);
     controller.scannedDataStream.listen((scanData) {
-      Provider.of<ScannerQRProvider>(context, listen: false)
-          .setResult(scanData);
-      Provider.of<ScannerQRProvider>(context, listen: false).checkScanResult();
+      Provider.of<ScannerQRProvider>(context, listen: false).setResult(scanData);
+      Provider.of<ScannerQRProvider>(context, listen: false).checkScanResult(context);
     });
   }
 

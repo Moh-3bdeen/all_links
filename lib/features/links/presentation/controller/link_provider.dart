@@ -14,6 +14,7 @@ class LinkProvider extends ChangeNotifier {
 
   bool isShowProgress = false;
   bool isGettingData = false;
+  bool isFirstTime = true;
 
   changeShowProgress() {
     isShowProgress = !isShowProgress;
@@ -28,14 +29,15 @@ class LinkProvider extends ChangeNotifier {
   ////////////////////////////////////////
 
   Future<List<Link>> getMyLinks(BuildContext context) async {
-    if (allMyLinks.isEmpty) {
+    if (isFirstTime) {
+      isFirstTime = false;
       changeGettingData();
       var linksRepo = await LinkRepository.getLinkList();
       changeGettingData();
       linksRepo.fold((error) {
         log("Error type is: ${error.runtimeType.toString()}");
         if (error is NoInternetException) {
-          AllDialogs.alertDialog(context, error.message, "Check your wifi and then login", true);
+          AllDialogs.alertDialog(context, error.message, "Check your wifi and then open app to show links", true);
         }
         if (error is FetchDataException) {
           AllDialogs.alertDialog(context, error.message, "", true);
@@ -62,7 +64,7 @@ class LinkProvider extends ChangeNotifier {
       linkRepo.fold((error) {
         log("Error type is: ${error.runtimeType.toString()}");
         if (error is NoInternetException) {
-          AllDialogs.alertDialog(context, error.message, "Check your wifi and then login", true);
+          AllDialogs.alertDialog(context, error.message, "Check your wifi and then add link", true);
         }
         if (error is FetchDataException) {
           AllDialogs.alertDialog(context, error.message, "", true);
@@ -96,7 +98,7 @@ class LinkProvider extends ChangeNotifier {
       linkRepo.fold((error) {
         log("Error type is: ${error.runtimeType.toString()}");
         if (error is NoInternetException) {
-          AllDialogs.alertDialog(context, error.message, "Check your wifi and then login", true);
+          AllDialogs.alertDialog(context, error.message, "Check your wifi and then update link", true);
         }
         if (error is FetchDataException) {
           AllDialogs.alertDialog(context, error.message, "", true);
@@ -136,7 +138,7 @@ class LinkProvider extends ChangeNotifier {
     linkRepo.fold((error) {
       log("Error type is: ${error.runtimeType.toString()}");
       if (error is NoInternetException) {
-        AllDialogs.alertDialog(context, error.message, "Check your wifi and then login", true);
+        AllDialogs.alertDialog(context, error.message, "Check your wifi and then delete link", true);
       }
       if (error is FetchDataException) {
         AllDialogs.alertDialog(context, error.message, "", true);

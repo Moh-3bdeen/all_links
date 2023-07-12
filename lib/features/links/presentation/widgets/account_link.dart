@@ -10,86 +10,114 @@ import '../controller/link_provider.dart';
 
 class AccountLink extends StatelessWidget {
   final Link link;
+  final bool isSlidable;
   final Color background;
 
   const AccountLink(
       {super.key,
       required this.link,
-      required this.background});
+      required this.background,
+      required this.isSlidable});
 
   void _launchUrl(BuildContext context, String rul) async {
     if (await canLaunch(rul)) {
       await launch(rul);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Could not launch: $rul!'),
-      ),);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not launch: $rul!'),
+        ),
+      );
 
       throw 'Could not launch $rul';
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         _launchUrl(context, link.link ?? "");
       },
-      child: Slidable(
-        key: const ValueKey(0),
-        startActionPane: ActionPane(
-          motion: const ScrollMotion(),
-          // dismissible: DismissiblePane(onDismissed: () {}),
-          children: [
-            SlidableAction(
-              onPressed: (context){
-                Provider.of<LinkProvider>(context, listen: false).deleteLink(context, link);
-              },
-              backgroundColor: const Color(0xFFFE4A49),
-              foregroundColor: Colors.white,
-              icon: Icons.delete,
-              label: 'Delete',
-            ),
-          ],
-        ),
-        endActionPane:  ActionPane(
-          motion: const ScrollMotion(),
-          children: [
-            SlidableAction(
-              onPressed: (context){
-                Navigator.pushNamed(context, RouterList.addOrEditLink, arguments: link);
-              },
-              backgroundColor: const Color(0xFF21B7CA),
-              foregroundColor: Colors.white,
-              icon: Icons.update,
-              label: 'Update',
-            ),
-          ],
-        ),
-
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                link.title ?? "",
-                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+      child: isSlidable
+          ? Slidable(
+              key: const ValueKey(0),
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                // dismissible: DismissiblePane(onDismissed: () {}),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {
+                      Provider.of<LinkProvider>(context, listen: false)
+                          .deleteLink(context, link);
+                    },
+                    backgroundColor: const Color(0xFFFE4A49),
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
+                ],
               ),
-              kSizeBoxH8,
-              Text(link.link ?? ""),
-            ],
-          ),
-        ),
-      ),
-
-
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {
+                      Navigator.pushNamed(context, RouterList.addOrEditLink,
+                          arguments: link);
+                    },
+                    backgroundColor: const Color(0xFF21B7CA),
+                    foregroundColor: Colors.white,
+                    icon: Icons.update,
+                    label: 'Update',
+                  ),
+                ],
+              ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: background,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      link.title ?? "",
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                    kSizeBoxH8,
+                    Text(link.link ?? ""),
+                  ],
+                ),
+              ),
+            )
+          : Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: background,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    link.title ?? "",
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                  ),
+                  kSizeBoxH8,
+                  Text(link.link ?? ""),
+                ],
+              ),
+            ),
     );
   }
 }
