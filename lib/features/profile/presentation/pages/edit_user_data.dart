@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_button.dart';
 import '../../../../core/constants/app_text_field.dart';
-import '../../../profile/presentation/widgets/profile_image.dart';
+import '../widgets/profile_image.dart';
 
 class EditUserDataScreen extends StatelessWidget {
   const EditUserDataScreen({super.key});
@@ -39,7 +39,7 @@ class EditUserDataScreen extends StatelessWidget {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ProfileImage(radius: 70),
+                  ProfileImage(radius: 70, enableUpdate: true),
                 ],
               ),
               kSizeBoxH32,

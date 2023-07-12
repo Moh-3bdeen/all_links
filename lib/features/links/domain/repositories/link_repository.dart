@@ -40,6 +40,8 @@ class LinkRepository {
     }
   }
 
+  ////////////////////////////////////
+
   static Future<Either<Exception, Link>> addLink(String title, String link, String userName) async {
     if (await networkConnection.isConnected) {
       try {
@@ -54,6 +56,55 @@ class LinkRepository {
         });
         log("Response is: ${response["link"]}");
         return Right(Link.fromJson(response["link"]));
+      } catch (error) {
+        log(error.toString());
+        return Left(FetchDataException("Somethings error"));
+      }
+    } else {
+      return Left(NoInternetException("No Internet Connection"));
+    }
+  }
+
+  ////////////////////////////////////
+
+  static Future<Either<Exception, String>> updateLink(int id, String title, String link, String userName) async {
+    if (await networkConnection.isConnected) {
+      try {
+        log("Token is: $userToken");
+        final response = await _helper.put(url: "${ApiSetting.updateLink}$id", header: {
+          'Authorization': 'Bearer $userToken',
+        }, body: {
+          "title": title,
+          "link": link,
+          "username": userName,
+          // "isActive": 0,
+        });
+        log("Response is: ${response["message"]}");
+        return Right(response["message"]);
+      } catch (error) {
+        log(error.toString());
+        return Left(FetchDataException("Somethings error"));
+      }
+    } else {
+      return Left(NoInternetException("No Internet Connection"));
+    }
+  }
+
+  ////////////////////////////////////
+
+  static Future<Either<Exception, String>> deleteLink(int id) async {
+    if (await networkConnection.isConnected) {
+      try {
+        log("Token is: $userToken");
+        final response = await _helper.delete(
+          url: "${ApiSetting.deleteLink}$id",
+          header: {
+            'Authorization': 'Bearer $userToken',
+          },
+          body: {},
+        );
+        log("Response is: ${response["message"]}");
+        return Right(response["message"]);
       } catch (error) {
         log(error.toString());
         return Left(FetchDataException("Somethings error"));

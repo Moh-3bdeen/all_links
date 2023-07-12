@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/signup_screen.dart';
-import '../../features/home/presentation/pages/edit_user_data.dart';
+import '../../features/profile/presentation/pages/edit_user_data.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
 import '../../features/home/presentation/pages/scanner_qrcode_screen.dart';
 import '../../features/home/presentation/pages/splash_screen.dart';

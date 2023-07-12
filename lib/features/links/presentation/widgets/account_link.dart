@@ -1,16 +1,19 @@
 import 'package:all_links/core/constants/constant.dart';
+import 'package:all_links/core/constants/router_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../data/models/link_model.dart';
+import '../controller/link_provider.dart';
+
 class AccountLink extends StatelessWidget {
-  final String appName;
-  final String link;
+  final Link link;
   final Color background;
 
   const AccountLink(
       {super.key,
-      required this.appName,
       required this.link,
       required this.background});
 
@@ -19,7 +22,7 @@ class AccountLink extends StatelessWidget {
       await launch(rul);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Could not launch $rul!'),
+        content: Text('Could not launch: $rul!'),
       ),);
 
       throw 'Could not launch $rul';
@@ -31,29 +34,33 @@ class AccountLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        _launchUrl(context, link);
+        _launchUrl(context, link.link ?? "");
       },
       child: Slidable(
         key: const ValueKey(0),
-        startActionPane: const ActionPane(
-          motion: ScrollMotion(),
+        startActionPane: ActionPane(
+          motion: const ScrollMotion(),
           // dismissible: DismissiblePane(onDismissed: () {}),
           children: [
             SlidableAction(
-              onPressed: null,
-              backgroundColor: Color(0xFFFE4A49),
+              onPressed: (context){
+                Provider.of<LinkProvider>(context, listen: false).deleteLink(context, link);
+              },
+              backgroundColor: const Color(0xFFFE4A49),
               foregroundColor: Colors.white,
               icon: Icons.delete,
               label: 'Delete',
             ),
           ],
         ),
-        endActionPane: const ActionPane(
-          motion: ScrollMotion(),
+        endActionPane:  ActionPane(
+          motion: const ScrollMotion(),
           children: [
             SlidableAction(
-              onPressed: null,
-              backgroundColor: Color(0xFF21B7CA),
+              onPressed: (context){
+                Navigator.pushNamed(context, RouterList.addOrEditLink, arguments: link);
+              },
+              backgroundColor: const Color(0xFF21B7CA),
               foregroundColor: Colors.white,
               icon: Icons.update,
               label: 'Update',
@@ -72,11 +79,11 @@ class AccountLink extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                appName,
+                link.title ?? "",
                 style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
               ),
               kSizeBoxH8,
-              Text(link),
+              Text(link.link ?? ""),
             ],
           ),
         ),

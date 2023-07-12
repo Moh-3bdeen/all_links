@@ -39,12 +39,29 @@ class ApiBaseHelper {
 
   ////////////////////////////////////////////////
 
-  Future<dynamic> put(
-      {required String url, required Map<String, dynamic> body}) async {
+  Future<dynamic> put({required String url,required Map<String, String> header, required Map<String, dynamic> body}) async {
     var responseJson;
     try {
       final response = await http.put(
         Uri.parse(url),
+        headers: header,
+        body: body,
+      );
+      responseJson = returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  ////////////////////////////////////////////////
+
+  Future<dynamic> delete({required String url,required Map<String, String> header, required Map<String, dynamic> body}) async {
+    var responseJson;
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: header,
         body: body,
       );
       responseJson = returnResponse(response);

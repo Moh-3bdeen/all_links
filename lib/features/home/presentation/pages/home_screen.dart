@@ -1,5 +1,8 @@
 import 'package:all_links/core/constants/constant.dart';
+import 'package:all_links/core/shimmers/shimmers.dart';
 import 'package:all_links/features/home/presentation/controller/home_provider.dart';
+import 'package:all_links/features/links/data/models/link_model.dart';
+import 'package:all_links/features/links/presentation/controller/link_provider.dart';
 import 'package:all_links/features/links/presentation/widgets/account_link.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -61,19 +64,30 @@ class HomeScreen extends StatelessWidget {
             kDivider,
             kSizeBoxH16,
             Expanded(
-              // height: 600,
-              child: ListView.builder(
-                // shrinkWrap: false,
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      child: AccountLink(
-                          appName: "appName",
-                          link: "link",
-                          background: Colors.red));
-                },
-              ),
+              child: Consumer<LinkProvider>(builder: (context, provider, child) {
+                if (provider.allMyLinks.isEmpty) {
+                  provider.getMyLinks(context);
+                }
+                return ListView.builder(
+                  itemCount: provider.isGettingData
+                      ? 5
+                      : provider.allMyLinks.length > 3
+                          ? 3
+                          : provider.allMyLinks.length,
+                  itemBuilder: (context, index) {
+                    return provider.isGettingData
+                        ? AllShimmerLoaded.accountLink()
+                        : Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            child: AccountLink(
+                              // appName: provider.allMyLinks[index].title ?? "",
+                              link: provider.allMyLinks[index],
+                              background: const Color(0xFFFEE2E7),
+                            ),
+                          );
+                  },
+                );
+              }),
             ),
           ],
         ),

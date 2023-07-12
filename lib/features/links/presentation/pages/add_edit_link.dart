@@ -1,4 +1,5 @@
 import 'package:all_links/core/constants/constant.dart';
+import 'package:all_links/features/links/data/models/link_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -11,18 +12,28 @@ class AddOrEditLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    dynamic args = ModalRoute.of(context)!.settings.arguments;
+    String type = "Add Link";
+    if(args != null){
+      type = "Update Link";
+      Provider.of<LinkProvider>(context, listen: false).titleController.text = args.title!;
+      Provider.of<LinkProvider>(context, listen: false).linkController.text = args.link!;
+    }
+
     return Consumer<LinkProvider>(builder: (context, provider, child){
       return Scaffold(
         backgroundColor: kBackgroundColor,
         appBar: AppBar(
           backgroundColor: kBackgroundColor,
-          title: const Text(
-            "Add Link",
-            style: TextStyle(color: Colors.black),
+          title: Text(
+            type,
+            style: const TextStyle(color: Colors.black),
           ),
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
+              provider.titleController.clear();
+              provider.linkController.clear();
               Navigator.pop(context);
             },
             icon: const Icon(
@@ -66,10 +77,14 @@ class AddOrEditLink extends StatelessWidget {
                 kSizeBoxH32,
                 kSizeBoxH32,
                 AppButton(
-                  text: "Add Link",
+                  text: type,
                   showProgress: provider.isShowProgress,
                   onPressed: (){
-                    provider.addLink(context);
+                    if(type == "Add Link") {
+                      provider.addLink(context);
+                    }else{
+                      provider.updateLink(context, args);
+                    }
                   },
                 ),
               ],

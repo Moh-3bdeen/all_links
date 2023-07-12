@@ -4,6 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AllShimmerLoaded {
+  static Shimmer accountLink() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[400]!,
+      highlightColor: Colors.grey[100]!,
+      child: const AccountLinkShimmer(),
+    );
+  }
+
+//////////////////////////////////
+
   static Shimmer profileScreen() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[400]!,

@@ -32,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const ProfileImage(radius: 55),
+                            const ProfileImage(radius: 55, enableUpdate: false),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,8 +131,8 @@ class ProfileScreen extends StatelessWidget {
                                     return Column(
                                       children: [
                                         AccountLink(
-                                          appName: link.title ?? "",
-                                          link: link.link ?? "",
+                                          // appName: link.title ?? "",
+                                          link: link,
                                           background: index % 2 == 0
                                               ? const Color(0xFFFEE2E7)
                                               : const Color(0xFFE7E5F1),
