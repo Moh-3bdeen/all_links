@@ -33,7 +33,7 @@ class _PageViewAppState extends State<PageViewApp> {
 
   @override
   void initState() {
-    // Provider.of<LocationProvider>(context, listen: false).getLocation(context);
+    Provider.of<LocationProvider>(context, listen: false).getLocation(context);
     super.initState();
   }
 
@@ -45,6 +45,7 @@ class _PageViewAppState extends State<PageViewApp> {
 
   @override
   Widget build(BuildContext context) {
+    // Provider.of<LocationProvider>(context, listen: false).getLocation(context);
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(

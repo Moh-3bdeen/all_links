@@ -7,6 +7,7 @@ import 'package:all_links/features/home/presentation/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/constants/app_routes.dart';
+import 'features/active_sharing/presentation/controller/active_sharing_provider.dart';
 import 'features/auth/presentation/controller/login_provider.dart';
 import 'features/profile/presentation/controller/followers_provider.dart';
 import 'features/profile/presentation/controller/profile_provider.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FollowersProvider()),
         ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(create: (_) => UserProfileProvider()),
+        ChangeNotifierProvider(create: (_) => ActiveSharingProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../../active_sharing/presentation/controller/active_sharing_provider.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -30,35 +32,40 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             kSizeBoxH16,
-            GestureDetector(
-              onTap: () {},
-              onLongPress: () {
-                provider.changeActiveValue();
-              },
-              child: SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height / 2.8,
-                child: Center(
-                  child: QrImageView(
-                    data: jsonEncode(provider.qrCode) ?? "",
-                    version: QrVersions.auto,
-                    size: MediaQuery.of(context).size.height / 2.8,
-                    backgroundColor: provider.isActive ? kMainColorDark : Colors.white,
-                    foregroundColor: provider.isActive ? Colors.white : Colors.black,
-                    errorStateBuilder: (cxt, err) {
-                      return const SizedBox(
-                        child: Center(
-                          child: Text(
-                            'Something went wrong...',
-                            textAlign: TextAlign.center,
+            Consumer<ActiveSharingProvider>(builder: (context, activeSharingProvider, child){
+              return InkWell(
+                onTap: () {},
+                onLongPress: () {
+                  activeSharingProvider.changeActiveValue();
+                  activeSharingProvider.isActive
+                      ? activeSharingProvider.setActiveSharing(context, "receiver")
+                      : activeSharingProvider.removeActiveSharing(context, activeSharingProvider.userId ?? 0);
+                },
+                child: SizedBox(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 2.8,
+                  child: Center(
+                    child: QrImageView(
+                      data: jsonEncode(provider.qrCode) ?? "",
+                      version: QrVersions.auto,
+                      size: MediaQuery.of(context).size.height / 2.8,
+                      backgroundColor: activeSharingProvider.isActive ? kMainColorDark : Colors.white,
+                      foregroundColor: activeSharingProvider.isActive ? Colors.white : Colors.black,
+                      errorStateBuilder: (cxt, err) {
+                        return const SizedBox(
+                          child: Center(
+                            child: Text(
+                              'Something went wrong...',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
             kSizeBoxH16,
             kDivider,
             kSizeBoxH16,
@@ -95,7 +102,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             const Text("You did not added any link before"),
                             kSizeBoxH8,
-                            GestureDetector(
+                            InkWell(
                               onTap: () {
                                 Navigator.pushNamed(context, RouterList.addOrEditLink);
                               },

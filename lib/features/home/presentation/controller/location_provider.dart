@@ -21,14 +21,14 @@ class LocationProvider extends ChangeNotifier {
           AllDialogs.alertDialog(context, "Location permissions", "Location permissions are denied Forever", true);
         } else {
           Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-          // print(position.longitude);
-          // print(position.latitude);
+          log(position.longitude.toString());
+          log(position.latitude.toString());
           await updateLocation(context, position.latitude.toString(), position.longitude.toString());
         }
       } else {
         Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        // print(position.longitude);
-        // print(position.latitude);
+        log(position.longitude.toString());
+        log(position.latitude.toString());
         await updateLocation(context, position.latitude.toString(), position.longitude.toString());
       }
     } else {

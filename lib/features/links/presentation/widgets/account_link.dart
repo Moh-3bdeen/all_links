@@ -35,7 +35,7 @@ class AccountLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         _launchUrl(context, link.link ?? "");
       },
